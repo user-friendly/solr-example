@@ -1,0 +1,65 @@
+version: '3'
+services:
+#    web:
+#        build:
+#            context: .
+#            args:
+#                HOST_DEV_USER: $HOST_DEV_USER
+#                HOST_DEV_UID: $HOST_DEV_UID
+#        tty: true
+#        ports:
+#            - "80:80"
+#            - "443:443"
+#        extra_hosts:
+#            - "dockerhost:$HOST_IP"
+#        volumes:
+#            - ./app:/var/www
+#        depends_on:
+#            - db
+#            - memorycache
+#    db:
+#        image: mariadb:10.5.8
+#        ports:
+#            - "3306:3306"
+#        volumes:
+#            - mariadb-lib:/var/lib/mysql
+#        environment:
+#            MYSQL_ROOT_PASSWORD: root
+#            MYSQL_DATABASE: drupal
+#    memorycache:
+#        image: memcached:1.6-alpine
+#        ports:
+#            - "11211:11211"
+#        entrypoint:
+#            - "/entrypoint.sh"
+#            - "-m 128"
+    app:
+        build:
+            context: .
+            args:
+                HOST_DEV_USER: $HOST_DEV_USER
+                HOST_DEV_UID: $HOST_DEV_UID
+                HOST_DEV_GID: $HOST_DEV_GID
+        tty: true
+        ports:
+            - "80:8080"
+            # - "443:443"
+            # Debugger port.
+            - "9229:9229"
+        volumes:
+            - ./app:/app
+        depends_on:
+            - solr
+    solr:
+        image: solr:8.9
+        ports:
+            - "8983:8983"
+        volumes:
+            - solr-data:/var/solr
+        command:
+            - solr-precreate
+            - gettingstarted
+
+volumes:
+    solr-data:
+#    mariadb-lib:

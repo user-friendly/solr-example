@@ -1,0 +1,20 @@
+#/bin/env sh
+
+# Default ecosystem file.
+ECO_FILE="ecosystem.config.js"
+# Default ecosystem environment is development.
+NODE_ENV=""
+# Command to be passed on to PM2
+CMD="$1"; shift
+# Default PM2 binary.
+PM2="./bin/pm2"
+
+case $CMD in
+    start|stop|restart|reload|delete)
+    ;;
+    *)
+        ECO_FILE=""
+    ;;
+esac
+
+$PM2 $CMD $ECO_FILE $@ 

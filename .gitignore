@@ -1,0 +1,7 @@
+
+/app/node_modules/
+# Should be outside the app root
+/app/sslcert/*
+/app/pm2
+/app/public/files
+/app/logs

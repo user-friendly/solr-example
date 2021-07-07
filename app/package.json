@@ -1,0 +1,20 @@
+{
+  "name": "calcalc",
+  "version": "0.1.0",
+  "description": "Calorie Calculator",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "calorie",
+    "calculator",
+    "parser"
+  ],
+  "author": "User-Friendly",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pm2": "^5.1.0"
+  }
+}
