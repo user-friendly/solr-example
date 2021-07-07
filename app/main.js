@@ -52,6 +52,63 @@ app.get('/', (req, res, next) => {
     })
 })
 
+app.post('/', (req, res, next) => {
+    let status = 200
+    
+    let resData = ''
+    
+    let data = [
+        req.body
+    ]
+    let dataString = JSON.stringify(data)
+    
+    let options = {
+        // Hostname is the same as the docker-compose.yml service name.
+        hostname: 'solr',
+        port: 8983,
+        path: '/solr/gettingstarted/update?overwrite=true&wt=json',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': dataString.length
+        }
+    }
+
+    let solrReq = http.request(options, solrRes => {
+        console.log(`STATUS: ${solrRes.statusCode}`)
+        console.log(`HEADERS: ${JSON.stringify(solrRes.headers)}`)
+        
+        solrRes.setEncoding('utf8')
+        
+        solrRes.on('data', d => {
+            resData += d
+        })
+        solrRes.on('end', () => {
+            if (solrRes.statusCode != 200) {
+                res.json({
+                    "status": solrRes.statusCode,
+                    "statusMessage": "Solr error",
+                    "statusError": solrRes.statusMessage
+                })
+            }
+            res.json({
+                "status": 200,
+                "statusMessage": "Solr",
+                "SolrResponse": JSON.parse(resData)
+            })
+        })
+        solrRes.on('error', (e) => {
+            res.json({
+                "status": 500,
+                "statusMessage": "Solr error",
+                "statusError": e.message
+            })
+        })
+    })
+    solrReq.write(dataString)
+    solrReq.end()
+})
+
 http.createServer(app).listen(port, () => {
     console.log(`HTTP server listening on http://localhost:${port}`)
 })
